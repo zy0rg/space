@@ -1,6 +1,6 @@
 define([
 	'jquery',
-	'core/socket'
+	'../client/socket'
 ], function ($, socket) {
 
 	var i,

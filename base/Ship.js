@@ -8,7 +8,7 @@ define([
 
 	return Shape.extend({
 
-		type: 'Ship',
+		type: 'ship',
 		image: 'ship',
 
 		x: 0,
@@ -32,19 +32,20 @@ define([
 			}
 		},
 
-		toJSON: function () {
-			var keys = this.keys;
-			return {
+		toJSON: function (full) {
+			var json = {
 				id: this.id,
 				x: this.x,
 				y: this.y,
 				xSpeed: this.xSpeed,
 				ySpeed: this.ySpeed,
 				angle: this.angle,
-				type: this.type,
 				rotating: this.rotating,
 				accelerating: this.accelerating
-			}
+			};
+			if (full)
+				json.type = this.type;
+			return json;
 		}
 	});
 });

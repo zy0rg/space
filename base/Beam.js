@@ -6,7 +6,7 @@ define([
 
 	return Shape.extend({
 
-		type: 'Beam',
+		type: 'beam',
 		image: 'pulse',
 
 		timeout: 500,
@@ -23,16 +23,18 @@ define([
 			this.y -= Math.sin(this.angle) * val;
 		},
 
-		toJSON: function () {
-			return {
+		toJSON: function (full) {
+			var json = {
 				id: this.id,
 				x: this.x,
 				y: this.y,
 				xSpeed: this.xSpeed,
 				ySpeed: this.ySpeed,
-				angle: this.angle,
-				type: this.type
-			}
+				angle: this.angle
+			};
+			if (full)
+				json.type = this.type;
+			return json;
 		}
 	});
 });

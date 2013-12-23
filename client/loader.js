@@ -1,6 +1,4 @@
-define([
-	'jquery'
-], function ($) {
+define(function () {
 
 	var self = {
 		loadImage: function (path, destination, name) {
