@@ -4,54 +4,53 @@ define([
 	'core/socket',
 	'core/canvas',
 	'core/ticker',
+	'core/objects',
 
 	'base/Ship',
+	'base/Beam',
 
 	'core/keys'
-], function ($, socket, canvas, ticker, Ship) {
+], function ($, socket, canvas, ticker, objects, Ship, Beam) {
 
 	canvas.fullscreen(true);
 
 	ticker.callbacks.push(canvas.draw);
 	ticker.start();
 
-	var ships = {},
-		addShip = function (data) {
-			var ship = ships[data.id] = new Ship(data);
-			canvas.add(ship);
-			ticker.objects.push(ship);
-		},
-		removeShip = function (id) {
-			var ship = ships[id];
-			canvas.remove(ship);
-			delete ships[id];
-		};
+	function add(data) {
+		var object;
+		switch (data.type) {
+			case 'Ship':
+				object = new Ship(data);
+				break;
+			case 'Beam':
+				object = new Beam(data);
+				break;
+		}
+		objects[data.id] = object;
+		canvas.add(object);
+	}
 
-	socket.on('add', function (data) {
-		if (ships[data.id])
-			removeShip(data.id);
-		addShip(data);
+	socket.on('remove', function (id) {
+		delete objects[id];
 	});
-	socket.on('remove', removeShip);
-	socket.on('ships', function (data) {
-		var i, ship, props;
+	socket.on('objects', function (data) {
+		var i, props;
 		for (i in data) {
 			props = data[i];
-			if (ship = ships[props.id])
-				ship.extend(props);
+			if (objects.hasOwnProperty(props.id))
+				objects[props.id].extend(props);
 			else
-				addShip(props);
+				add(props);
 		}
-		for (i in ships)
-			if (!data[ships[i].id]) {
-				canvas.remove(ship);
-				delete ships[i];
-			}
+		for (i in objects)
+			if (!data[i])
+				delete objects[i];
 	});
-	socket.on('key', function (data) {
-		ships[data.id].keys[data.key] = data.pressed;
-	});
-	socket.on('ship', function (data) {
-		ships[data.id].extend(data.data);
+	socket.on('object', function (data) {
+		if (objects.hasOwnProperty(data.id))
+			objects[data.id].extend(data);
+		else
+			add(data);
 	});
 });

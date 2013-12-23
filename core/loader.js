@@ -7,7 +7,7 @@ define([
 			var img = new Image();
 			img.src = 'img/' + path + '.png';
 			img.addEventListener("load", function () {
-				destination[name] = img;
+				destination[name || path] = img;
 			}, false);
 		},
 

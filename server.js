@@ -6,7 +6,9 @@ var http_lib = require('http'),
 	requirejs = require('requirejs'),
 
 	Ship = requirejs('base/Ship'),
+	Beam = requirejs('base/Beam'),
 	ticker = requirejs('core/ticker'),
+	objects = requirejs('core/objects'),
 
 	http, io,
 
@@ -16,7 +18,6 @@ var http_lib = require('http'),
 		response.end();
 	},
 
-	ships = [],
 	id = 0,
 	tickCounter = 0;
 
@@ -53,24 +54,31 @@ http = http_lib.createServer(function (request, response) {
 io = io_lib.listen(http);
 
 io.sockets.on('connection', function (socket) {
-	var ship = new Ship();
-	ship.id = ++id;
-	ship.keys = {
-		left: false,
-		up: false,
-		right: false,
-		down: false
-	};
-	ships.push(ship);
-	ticker.objects.push(ship);
-	io.sockets.emit('add', ship.toJSON());
+	var i, data = {},
+		ship = new Ship({
+			id: ++id,
+			keys: {up: false}
+		}),
+		shoot = function () {
+			var beam = new Beam({
+				id: ++id,
+				x: ship.x,
+				y: ship.y,
+				angle: ship.angle
+			});
+			objects[id] = beam;
+			beam = beam.toJSON();
+			beam.type = 'Beam';
+			io.sockets.emit('object', beam);
+		};
+	objects[id] = ship;
+	for (i in objects) {
+		data[i] = objects[i].toJSON();
+		data[i].type = objects[i].type;
+	}
+	socket.emit('objects', data);
 	socket.on('disconnect', function () {
-		var i = ships.indexOf(ship);
-		if (~i)
-			ships.splice(i, 1);
-		i = ticker.objects.indexOf(ship);
-		if (~i)
-			ticker.objects.splice(i, 1);
+		delete objects[ship.id];
 		io.sockets.emit('remove', ship.id);
 	});
 	socket.on('key', function (data) {
@@ -78,10 +86,18 @@ io.sockets.on('connection', function (socket) {
 		keys[data.key] = data.pressed;
 		ship.rotating = keys.left ? keys.right ? 0 : 1 : keys.right ? -1 : 0;
 		ship.accelerating = keys.up;
-		io.sockets.emit('ship', {
-			id: ship.id,
-			data: ship.toJSON()
-		});
+
+		if (data.key == 'ctrl' && data.pressed == !ship.shootInterval) {
+			if (data.pressed) {
+				shoot();
+				ship.shootInterval = setInterval(shoot, 500);
+			} else {
+				clearInterval(ship.shootInterval);
+				delete ship.shootInterval;
+			}
+		}
+
+		io.sockets.emit('object', ship.toJSON());
 	});
 	socket.on('latency', function (data) {
 		socket.emit('latency', data);
@@ -89,14 +105,12 @@ io.sockets.on('connection', function (socket) {
 });
 
 ticker.callbacks.push(function () {
-	var data = {}, i, ship;
+	var data = {}, i;
 	if (++tickCounter == 30) {
 		tickCounter = 0;
-		for (i = 0; i < ships.length; i++) {
-			ship = ships[i];
-			data[ship.id] = ship.toJSON();
-		}
-		io.sockets.emit('ships', data);
+		for (i in objects)
+			data[i] = objects[i].toJSON();
+		io.sockets.emit('objects', data);
 	}
 });
 

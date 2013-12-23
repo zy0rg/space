@@ -53,7 +53,7 @@ define([
 				return;
 			}
 
-			if (this.angularPoints.length) {
+			if (this.angularPoints && this.angularPoints.length) {
 				var i = 0,
 					coords;
 

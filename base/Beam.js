@@ -2,12 +2,14 @@ define([
 	'./Shape'
 ], function (Shape) {
 
-	var speed = 0.01;
+	var speed = 0.2;
 
 	return Shape.extend({
 
 		type: 'Beam',
 		image: 'pulse',
+
+		timeout: 500,
 
 		x: 0,
 		y: 0,
@@ -15,22 +17,10 @@ define([
 		xSpeed: 0,
 		ySpeed: 0,
 
-		constructor: function (data) {
-			Shape.call(this);
-			this.extend(data);
-		},
-
 		tick: function (ms) {
-			for (var i = 0; i < ms; i++) {
-				if (this.rotating)
-					this.angle += rotation * this.rotating;
-				if (this.accelerating) {
-					this.xSpeed += Math.cos(this.angle) * acceleration;
-					this.ySpeed -= Math.sin(this.angle) * acceleration;
-				}
-				this.x += (this.xSpeed *= deceleration);
-				this.y += (this.ySpeed *= deceleration);
-			}
+			var val = speed * ms;
+			this.x += Math.cos(this.angle) * val;
+			this.y -= Math.sin(this.angle) * val;
 		},
 
 		toJSON: function () {
@@ -41,8 +31,7 @@ define([
 				xSpeed: this.xSpeed,
 				ySpeed: this.ySpeed,
 				angle: this.angle,
-				rotating: this.rotating,
-				accelerating: this.accelerating
+				type: this.type
 			}
 		}
 	});

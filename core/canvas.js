@@ -1,26 +1,25 @@
 define([
 	'jquery',
 
-	'core/loader'
-], function ($, loader) {
+	'core/loader',
+	'core/objects'
+], function ($, loader, objects) {
 
 	var $canvas = $('<canvas>').appendTo('[data-canvas]'),
 		canvas = $canvas[0],
 		ctx = canvas.getContext('2d'),
 
-		objects = [],
 		self,
 		resources = ctx.resources = {};
 
 	loader.loadImages({
 		background: 'space',
-		ship: 'ship'
+		ship: 'ship',
+		pulse: 'pulse'
 	}, resources);
 
 	self = {
 		$el: $canvas,
-
-		objects: objects,
 
 		x: 0,
 		y: 0,
@@ -28,19 +27,9 @@ define([
 		height: 100,
 
 		add: function (object) {
-			var i = objects.indexOf(object);
-			if (i == -1) {
-				objects.push(object);
-				object.draw(ctx);
-			}
-		},
-
-		remove: function (object) {
-			var i = objects.indexOf(object);
-			if (~i) {
-				objects.splice(i, 1);
-//				object.clear(ctx);
-			}
+			if (object.image && !resources[object.image])
+				loader.loadImage(object.image, resources);
+			object.draw(ctx);
 		},
 
 		draw: function () {
@@ -49,8 +38,11 @@ define([
 				ctx.drawImage(img, (img.width - self.width) / -2, (img.height - self.height) / -2);
 //				for (i = 0; i < objects.length; i++)
 //					objects[i].clear(ctx);
-			for (i = 0; i < objects.length; i++)
+			ctx.save();
+			ctx.translate(self.width / 2, self.height / 2);
+			for (i in objects)
 				objects[i].draw(ctx);
+			ctx.restore();
 		},
 
 		fullscreen: function (force) {

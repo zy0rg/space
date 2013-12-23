@@ -41,6 +41,7 @@ define([
 				xSpeed: this.xSpeed,
 				ySpeed: this.ySpeed,
 				angle: this.angle,
+				type: this.type,
 				rotating: this.rotating,
 				accelerating: this.accelerating
 			}

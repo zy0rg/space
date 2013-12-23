@@ -1,23 +1,28 @@
-define(function () {
+define([
+	'core/objects'
+], function (objects) {
 
 	var interval,
-		objects = [],
 		callbacks = [],
 		self,
 		last;
 
 	return self = {
-
-		objects: objects,
 		callbacks: callbacks,
 
 		tick: function () {
 			var i,
 				current = (new Date()).getTime(),
-				ms = (current - last) || 0;
+				ms = (current - last) || 0,
+				object;
 			last = current;
-			for (i = 0; i < objects.length; i++)
-				objects[i].tick(ms);
+			for (i in objects) {
+				object = objects[i];
+				if (Math.abs(object.x) > 1000 || Math.abs(object.y) > 1000)
+					delete objects[i];
+				else
+					object.tick(ms);
+			}
 			for (i = 0; i < callbacks.length; i++)
 				callbacks[i](ms);
 		},

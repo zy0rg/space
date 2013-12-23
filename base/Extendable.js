@@ -1,6 +1,6 @@
 define(function () {
 
-	function Module() {
+	function Extendable() {
 	}
 
 	function add(props) {
@@ -10,7 +10,7 @@ define(function () {
 					this[i] = props[i];
 	}
 
-	function extend(protoProps) {
+	function extend(protoProps, moreProps) {
 		var parent = this;
 		var child;
 
@@ -39,6 +39,7 @@ define(function () {
 		// Add prototype properties (instance properties) to the subclass,
 		// if supplied.
 		add.call(child.prototype, protoProps);
+		add.call(child.prototype, moreProps);
 
 		// Set a convenience property in case the parent's prototype is needed
 		// later.
@@ -47,7 +48,8 @@ define(function () {
 		return child;
 	}
 
-	Module.extend = extend;
+	Extendable.extend = extend;
+	Extendable.add = add;
 
-	return Module;
+	return Extendable;
 });
