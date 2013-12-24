@@ -16,14 +16,14 @@ define([
 
 		xSpeed: 0,
 		ySpeed: 0,
-		rotating: 0,
-		accelerating: false,
+		rotate: 0,
+		accelerate: false,
 
 		tick: function (ms) {
 			for (var i = 0; i < ms; i++) {
-				if (this.rotating)
-					this.angle += rotation * this.rotating;
-				if (this.accelerating) {
+				if (this.rotate)
+					this.angle += rotation * this.rotate;
+				if (this.accelerate) {
 					this.xSpeed += Math.cos(this.angle) * acceleration;
 					this.ySpeed -= Math.sin(this.angle) * acceleration;
 				}
@@ -40,8 +40,8 @@ define([
 				xSpeed: this.xSpeed,
 				ySpeed: this.ySpeed,
 				angle: this.angle,
-				rotating: this.rotating,
-				accelerating: this.accelerating
+				rotate: this.rotate,
+				accelerate: this.accelerate
 			};
 			if (full)
 				json.type = this.type;

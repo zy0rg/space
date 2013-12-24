@@ -1,7 +1,9 @@
 define([
 	'jquery',
-	'../client/socket'
-], function ($, socket) {
+
+	'core/tools',
+	'core/events'
+], function ($, tools, events) {
 
 	var i,
 		keys = {},
@@ -18,18 +20,22 @@ define([
 	for (i in ids)
 		keys[ids[i]] = false;
 
+	tools.extend(keys, events);
+
 	$(window).on({
 		keydown: function (event) {
 			var id = ids[event.which];
-			if (id && !keys[id])
-				socket.emit('key', {key: id, pressed: keys[id] = true});
-			event.preventDefault();
+			if (id && !keys[id]) {
+				keys.trigger(id, keys[id] = true);
+				event.preventDefault();
+			}
 		},
 		keyup: function (event) {
 			var id = ids[event.which];
-			if (id && keys[id])
-				socket.emit('key', {key: id, pressed: keys[id] = false});
-			event.preventDefault();
+			if (id && keys[id]) {
+				keys.trigger(id, keys[id] = false);
+				event.preventDefault();
+			}
 		}
 	});
 

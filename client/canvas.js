@@ -1,9 +1,9 @@
 define([
 	'jquery',
 
-	'core/loader',
-	'core/objects'
-], function ($, loader, objects) {
+	'core/objects',
+	'client/loader'
+], function ($, objects, loader) {
 
 	var $canvas = $('<canvas>').appendTo('[data-canvas]'),
 		canvas = $canvas[0],
@@ -59,6 +59,8 @@ define([
 			self.draw();
 		}
 	};
+
+	objects.on('add', self.add);
 
 	return self;
 });

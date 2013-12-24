@@ -1,16 +1,18 @@
-define(function () {
+define([
+	'core/tools'
+], function (tools) {
 
 	function Extendable() {
 	}
 
-	function add(props) {
-		if (props)
-			for (var i in props)
-				if (props.hasOwnProperty(i))
-					this[i] = props[i];
+	function addMethods() {
+		var args = Array.prototype.slice.call(arguments);
+		args.unshift(this.prototype);
+		tools.extend.apply(tools, args);
+		return this;
 	}
 
-	function extend(protoProps, moreProps) {
+	function extend(protoProps) {
 		var parent = this;
 		var child;
 
@@ -25,6 +27,7 @@ define(function () {
 			};
 		}
 
+		child.add = addMethods;
 		child.extend = extend;
 
 		// Set the prototype chain to inherit from `parent`, without calling
@@ -34,12 +37,12 @@ define(function () {
 		};
 		Surrogate.prototype = parent.prototype;
 		child.prototype = new Surrogate;
-		child.prototype.extend = add;
+		child.prototype.extend = tools.extend;
 
 		// Add prototype properties (instance properties) to the subclass,
 		// if supplied.
-		add.call(child.prototype, protoProps);
-		add.call(child.prototype, moreProps);
+		if (arguments.length)
+			tools.extend.apply(child.prototype, arguments);
 
 		// Set a convenience property in case the parent's prototype is needed
 		// later.
@@ -49,7 +52,7 @@ define(function () {
 	}
 
 	Extendable.extend = extend;
-	Extendable.add = add;
+	Extendable.add = tools.extend;
 
 	return Extendable;
 });

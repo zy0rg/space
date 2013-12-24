@@ -1,7 +1,9 @@
 define([
+	'core/events',
+
 	'base/Beam',
 	'base/Ship'
-], function (Beam, Ship) {
+], function (events, Beam, Ship) {
 
 	var counter = 0,
 		objects = {},
@@ -17,7 +19,8 @@ define([
 					data = type;
 					type = data.type;
 				}
-				var id = data && data.id || counter++;
+				data || (data = {});
+				var id = data.id || (data.id = counter++);
 				if (type && (type = types[type]))
 					return objects[id] = new type(data);
 			}
@@ -26,7 +29,7 @@ define([
 			value: function (data) {
 				if (objects.hasOwnProperty(data.id))
 					objects[data.id].extend(data);
-				else
+				else if (data.type)
 					objects.create(data);
 			}
 		},
@@ -49,6 +52,30 @@ define([
 			value: function (id) {
 				delete objects[id];
 			}
+		},
+		toJSON: {
+			value: function (full) {
+				var i, object,
+					data = {};
+				for (i in objects) {
+					object = objects[i];
+					object.update();
+					data[i] = object.toJSON(full);
+				}
+				return data;
+			}
+		},
+		on: {
+			value: events.on
+		},
+		off: {
+			value: events.off
+		},
+		trigger: {
+			value: events.trigger
+		},
+		eventHandlers: {
+			value: {}
 		}
 	});
 
