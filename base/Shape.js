@@ -48,6 +48,11 @@ define([
 				ctx.translate(this.x, this.y);
 				ctx.rotate(-this.angle);
 				var img = ctx.resources[this.image];
+				if (this.composition){
+					ctx.globalAlpha = 0.5;
+					ctx.drawImage(img, img.width / -2, img.height / -2);
+					ctx.globalCompositeOperation = this.composition;
+				}
 				ctx.drawImage(img, img.width / -2, img.height / -2);
 				ctx.restore();
 				return;

@@ -21,6 +21,10 @@ define([
 		}
 	});
 
+	io.set('authorization', function (data, callback) {
+		callback(null, true);
+	});
+
 	io.sockets.on('connection', function (socket) {
 		new UserContext(socket, io);
 	});

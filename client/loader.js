@@ -7,6 +7,7 @@ define(function () {
 			img.addEventListener("load", function () {
 				destination[name || path] = img;
 			}, false);
+			return img;
 		},
 
 		loadImages: function (map, destination) {

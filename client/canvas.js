@@ -14,7 +14,9 @@ define([
 
 	loader.loadImages({
 		background: 'space',
+		beam: 'beam',
 		ship: 'ship',
+		self: 'self',
 		pulse: 'pulse'
 	}, resources);
 

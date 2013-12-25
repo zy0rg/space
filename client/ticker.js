@@ -5,7 +5,8 @@ define([
 	var interval,
 		callbacks = [],
 		self,
-		last;
+		last,
+		timeout = 10;
 
 	return self = {
 		callbacks: callbacks,
@@ -30,7 +31,7 @@ define([
 		start: function () {
 			if (!interval) {
 				last = (new Date()).getTime();
-				this.interval = setInterval(self.tick, 40);
+				this.interval = setInterval(self.tick, timeout);
 			}
 		},
 

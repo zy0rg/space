@@ -7,7 +7,13 @@ define([
 	'server/users'
 ], function (Extendable, io, objects, users) {
 
+	var range = 23.43,
+		delta = 0.6946,
+		speed = 0.55;
+
 	return Extendable.extend({
+
+		leftBeam: true,
 
 		constructor: function (socket) {
 
@@ -17,7 +23,9 @@ define([
 
 			this.ship = objects.create('ship');
 
+			socket.broadcast.emit('object', this.ship.toJSON(true));
 			socket.emit('objects', objects.toJSON(true));
+			socket.emit('you', this.ship.id);
 
 			var _this = this;
 
@@ -62,9 +70,15 @@ define([
 		},
 
 		shoot: function () {
+
+			this.ship.update();
+			var angle = this.ship.angle + ((this.leftBeam = !this.leftBeam) ? delta : -delta);
+
 			io.sockets.emit('object', objects.create('beam', {
-				x: this.ship.x,
-				y: this.ship.y,
+				x: this.ship.x + Math.cos(angle) * range,
+				y: this.ship.y - Math.sin(angle) * range,
+				xSpeed: Math.cos(this.ship.angle) * speed,
+				ySpeed: Math.sin(this.ship.angle) * -speed,
 				angle: this.ship.angle
 			}).toJSON(true));
 		}

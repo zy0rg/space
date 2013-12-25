@@ -4,7 +4,8 @@ define([
 
 	var rotation = 0.01 / Math.PI,
 		acceleration = 0.0025,
-		deceleration = 0.998;
+		deceleration = 0.998,
+		pi2 = Math.PI * 2;
 
 	return Shape.extend({
 
@@ -22,7 +23,7 @@ define([
 		tick: function (ms) {
 			for (var i = 0; i < ms; i++) {
 				if (this.rotate)
-					this.angle += rotation * this.rotate;
+					this.angle = (this.angle + rotation * this.rotate) % pi2;
 				if (this.accelerate) {
 					this.xSpeed += Math.cos(this.angle) * acceleration;
 					this.ySpeed -= Math.sin(this.angle) * acceleration;
