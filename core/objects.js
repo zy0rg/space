@@ -40,7 +40,7 @@ define([
 					props = data[i];
 					if (objects.hasOwnProperty(props.id))
 						objects[props.id].extend(props);
-					else
+					else if (props.type)
 						objects.create(props);
 				}
 				for (i in objects)

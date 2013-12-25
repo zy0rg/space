@@ -31,6 +31,11 @@ define([
 				this.x += (this.xSpeed *= deceleration);
 				this.y += (this.ySpeed *= deceleration);
 			}
+
+//			this.x += this.xSpeed * ((Math.pow(deceleration, ms + 1) - 1) / (deceleration - 1) - 1);
+//			this.xSpeed *= Math.pow(deceleration, ms);
+//			this.y += this.ySpeed * ((Math.pow(deceleration, ms + 1) - 1) / (deceleration - 1) - 1);
+//			this.ySpeed *= Math.pow(deceleration, ms);
 		},
 
 		toJSON: function (full) {
