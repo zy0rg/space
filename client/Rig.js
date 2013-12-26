@@ -16,6 +16,18 @@ define([
 				this.extend(JSON.parse(item));
 		},
 
+		setShip: function (ship) {
+			this.ship = ship;
+			if (ship)
+				ship.extend = function (data) {
+					if (data.accelerate != this.accelerate ||
+						(this.accelerate && (data.rotate != this.rotate)))
+						tools.extend(this, data).buildPath();
+					else
+						tools.extend(this, data);
+				}
+		},
+
 		toJSON: function () {
 			return {
 				name: this.name

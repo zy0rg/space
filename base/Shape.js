@@ -43,12 +43,25 @@ define([
 			this.lastCoords.x = this.x;
 			this.lastCoords.y = this.y;
 
+			if (this.path) {
+				ctx.save();
+				ctx.fillStyle = "white";
+				ctx.strokeStyle = "black";
+				for (var i = 0; i < this.path.length; i++){
+					ctx.beginPath();
+					ctx.arc(this.path[i][0], this.path[i][1], 2, 0, 2 * Math.PI, true);
+					ctx.fill();
+					ctx.stroke();
+				}
+				ctx.restore();
+			}
+
 			if (this.image && ctx.resources[this.image]) {
 				ctx.save();
 				ctx.translate(this.x, this.y);
 				ctx.rotate(-this.angle);
 				var img = ctx.resources[this.image];
-				if (this.composition){
+				if (this.composition) {
 					ctx.globalAlpha = 0.5;
 					ctx.drawImage(img, img.width / -2, img.height / -2);
 					ctx.globalCompositeOperation = this.composition;
@@ -59,8 +72,7 @@ define([
 			}
 
 			if (this.angularPoints && this.angularPoints.length) {
-				var i = 0,
-					coords;
+				var coords;
 
 				ctx.fillStyle = this.color;
 				ctx.beginPath();
@@ -74,6 +86,22 @@ define([
 				}
 				ctx.fill();
 			}
+		},
+
+		buildPath: function () {
+			var dummy = this.toJSON(),
+				x = 1200, y = 1200,
+				i = 20,
+				path = [];
+			while ((Math.max(Math.abs(dummy.x), Math.abs(dummy.y)) < 1000)
+				&& (Math.max(Math.abs(dummy.x - x), Math.abs(dummy.y - y)) > 2)
+				&& (--i)) {
+				x = dummy.x;
+				y = dummy.y;
+				this.tick.call(dummy, 200);
+				path.push([dummy.x, dummy.y]);
+			}
+			this.path = path;
 		},
 
 		clear: function (ctx) {

@@ -21,10 +21,6 @@ define([
 		}
 	});
 
-	io.set('authorization', function (data, callback) {
-		callback(null, true);
-	});
-
 	io.sockets.on('connection', function (socket) {
 		new UserContext(socket, io);
 	});
@@ -35,7 +31,11 @@ define([
 		for (i in objects) {
 			object = objects[i];
 			object.update();
-			data[i] = object.toJSON();
+
+			if (Math.abs(object.x) > 1000 || Math.abs(object.y) > 1000)
+				delete objects[i];
+			else
+				data[i] = object.toJSON();
 		}
 		io.sockets.emit('objects', data);
 	}, 1500);

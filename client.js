@@ -12,12 +12,12 @@ define([
 ], function (io, objects, canvas, keys, ticker, rig, Ship) {
 
 	var socket = io.connect(),
-		mouse = true;
+		mouse = false;
 
 	Ship.add({
 		init: function () {
 			if (this.id == rig.id)
-				rig.ship = this;
+				rig.setShip(this);
 			this.image = 'self';
 		}
 	});
@@ -33,9 +33,7 @@ define([
 
 	socket.on('you', function (id) {
 		rig.id = id;
-		rig.ship = objects[id];
-		if (rig.ship)
-			rig.ship.image = 'self';
+		rig.setShip(objects[id]);
 	});
 
 	if (mouse) {
@@ -43,6 +41,7 @@ define([
 			rotate = 0,
 			accuracy = 0.2,
 			pi2 = Math.PI * 2;
+
 		ticker.callbacks.push(function () {
 			if (rotating && rig.ship && keys.mousePosition) {
 				var delta = Math.atan2(
@@ -57,7 +56,7 @@ define([
 
 				if (Math.abs(delta) < accuracy && rotate) {
 					socket.emit('control', 'rotate', rotate = 0);
-					rotating = false
+					rotating = false;
 				} else if ((delta = (delta > 0 ? 1 : -1)) != rotate) {
 					socket.emit('control', 'rotate', rotate = delta);
 				}

@@ -21,21 +21,29 @@ define([
 		accelerate: false,
 
 		tick: function (ms) {
-			for (var i = 0; i < ms; i++) {
+			var i;
+			if (!this.accelerate) {
+				i = (Math.pow(deceleration, ms + 1) - 1) / (deceleration - 1) - 1;
+				this.x += this.xSpeed * i;
+				this.y += this.ySpeed * i;
+				i = Math.pow(deceleration, ms);
+				this.xSpeed *= i;
+				this.ySpeed *= i;
 				if (this.rotate)
-					this.angle = (this.angle + rotation * this.rotate) % pi2;
-				if (this.accelerate) {
+					this.angle = (this.angle + rotation * this.rotate * ms) % pi2;
+			} else if (!this.rotate) {
+
+			} else {
+				for (i = 0; i < ms; i++) {
+					if (this.rotate)
+						this.angle += rotation * this.rotate;
 					this.xSpeed += Math.cos(this.angle) * acceleration;
 					this.ySpeed -= Math.sin(this.angle) * acceleration;
+					this.x += (this.xSpeed *= deceleration);
+					this.y += (this.ySpeed *= deceleration);
 				}
-				this.x += (this.xSpeed *= deceleration);
-				this.y += (this.ySpeed *= deceleration);
+				this.angle = this.angle % pi2;
 			}
-
-//			this.x += this.xSpeed * ((Math.pow(deceleration, ms + 1) - 1) / (deceleration - 1) - 1);
-//			this.xSpeed *= Math.pow(deceleration, ms);
-//			this.y += this.ySpeed * ((Math.pow(deceleration, ms + 1) - 1) / (deceleration - 1) - 1);
-//			this.ySpeed *= Math.pow(deceleration, ms);
 		},
 
 		toJSON: function (full) {
