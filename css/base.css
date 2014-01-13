@@ -16,3 +16,7 @@ body,
 .overflow {
 	overflow: hidden;
 }
+
+canvas {
+	background: url('/img/space.png') center center;
+}

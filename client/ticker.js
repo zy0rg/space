@@ -6,7 +6,7 @@ define([
 		callbacks = [],
 		self,
 		last,
-		timeout = 10;
+		timeout = 40;
 
 	return self = {
 		callbacks: callbacks,

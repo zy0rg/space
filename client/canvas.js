@@ -35,13 +35,15 @@ define([
 		},
 
 		draw: function () {
-			var i, img = resources.background;
-			if (img)
-				ctx.drawImage(img, (img.width - self.width) / -2, (img.height - self.height) / -2);
-//				for (i = 0; i < objects.length; i++)
-//					objects[i].clear(ctx);
+			var i
+//				, img = resources.background
+				;
+//			if (img)
+//				ctx.drawImage(img, (img.width - self.width) / -2, (img.height - self.height) / -2);
 			ctx.save();
 			ctx.translate(self.width / 2, self.height / 2);
+			for (i in objects)
+				objects[i].clear(ctx);
 			for (i in objects)
 				objects[i].draw(ctx);
 			ctx.restore();

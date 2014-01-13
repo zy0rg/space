@@ -9,6 +9,7 @@ define([
 		type: 'beam',
 		image: 'beam',
 		composition: 'lighter',
+		size: 21,
 
 		timeout: 500,
 

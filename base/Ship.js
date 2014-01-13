@@ -11,6 +11,7 @@ define([
 
 		type: 'ship',
 		image: 'ship',
+		size: 46,
 
 		x: 0,
 		y: 0,
