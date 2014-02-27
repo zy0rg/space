@@ -28,7 +28,7 @@ define([
 		}
 
 		child.add = addMethods;
-		child.extend = extend;
+		child.extend = parent.extend;
 
 		// Set the prototype chain to inherit from `parent`, without calling
 		// `parent`'s constructor function.

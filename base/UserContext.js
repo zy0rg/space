@@ -45,6 +45,7 @@ define([
 
 		disconnect: function () {
 			objects.delete(this.ship.id);
+			clearInterval(this.shootInterval);
 			io.sockets.emit('remove', this.ship.id);
 		},
 

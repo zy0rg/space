@@ -20,7 +20,7 @@ define([
 			this.ship = ship;
 			if (ship)
 				ship.extend = function (data) {
-					if (data.accelerate != this.accelerate ||
+					if ((data.accelerate != this.accelerate) ||
 						(this.accelerate && (data.rotate != this.rotate)))
 						tools.extend(this, data).buildPath();
 					else

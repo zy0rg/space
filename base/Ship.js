@@ -5,6 +5,8 @@ define([
 	var rotation = 0.01 / Math.PI,
 		acceleration = 0.0025,
 		deceleration = 0.998,
+		dcc = deceleration / (deceleration - 1),
+		acdc = acceleration * dcc,
 		pi2 = Math.PI * 2;
 
 	return Shape.extend({
@@ -22,7 +24,7 @@ define([
 		accelerate: false,
 
 		tick: function (ms) {
-			var i;
+			var i, j;
 			if (!this.accelerate) {
 				i = (Math.pow(deceleration, ms + 1) - 1) / (deceleration - 1) - 1;
 				this.x += this.xSpeed * i;
@@ -33,7 +35,13 @@ define([
 				if (this.rotate)
 					this.angle = (this.angle + rotation * this.rotate * ms) % pi2;
 			} else if (!this.rotate) {
-
+				i = Math.pow(deceleration, ms);
+				j = Math.cos(this.angle) * acdc;
+				this.x += this.xSpeed * dcc * (i - 1) + j * ((i - 1) * dcc - ms);
+				this.xSpeed = this.xSpeed * i + j * (i - 1);
+				j = Math.sin(this.angle) * acdc;
+				this.y += this.ySpeed * dcc * (i - 1) - j * ((i - 1) * dcc - ms);
+				this.ySpeed = this.ySpeed * i - j * (i - 1);
 			} else {
 				for (i = 0; i < ms; i++) {
 					if (this.rotate)

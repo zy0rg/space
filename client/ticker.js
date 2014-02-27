@@ -16,17 +16,19 @@ define([
 				current = (new Date()).getTime(),
 				ms = (current - last) || 0;
 			last = current;
-			for (i in objects)
+			for (i = 0; i < objects.length; i++)
 				objects[i].tick(ms);
 			for (i = 0; i < callbacks.length; i++)
 				callbacks[i](ms);
+			window.requestAnimationFrame(self.tick);
 		},
 
 		start: function () {
-			if (!interval) {
-				last = (new Date()).getTime();
-				this.interval = setInterval(self.tick, timeout);
-			}
+			window.requestAnimationFrame(self.tick);
+//			if (!interval) {
+//				last = (new Date()).getTime();
+//				this.interval = setInterval(self.tick, timeout);
+//			}
 		},
 
 		stop: function () {

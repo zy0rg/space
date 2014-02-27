@@ -6,7 +6,7 @@ define([
 ], function (events, Beam, Ship) {
 
 	var counter = 0,
-		objects = {},
+		objects = [],
 		types = {
 			beam: Beam,
 			ship: Ship
@@ -43,21 +43,25 @@ define([
 					else if (props.type)
 						objects.create(props);
 				}
-				for (i in objects)
+				for (i = 0; i < objects.length; i++)
 					if (!data[i])
-						delete objects[i];
+						objects.delete(i);
 			}
 		},
 		delete: {
 			value: function (id) {
+				var obj = objects[id],
+					i = objects.indexOf(obj);
 				delete objects[id];
+				if (~i)
+					objects.splice(i, 1);
 			}
 		},
 		toJSON: {
 			value: function (full) {
 				var i, object,
 					data = {};
-				for (i in objects) {
+				for (i = 0; i < objects.length; i++) {
 					object = objects[i];
 					object.update();
 					data[i] = object.toJSON(full);

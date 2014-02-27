@@ -26,17 +26,19 @@ define([
 	});
 
 	setInterval(function () {
-		var i, object,
+		var i, j, k, object,
 			data = {};
-		for (i in objects) {
+		for (i = 0; i < objects.length; i++) {
 			object = objects[i];
 			object.update();
+			object.buildPath(75);
 
 			if (Math.abs(object.x) > 1000 || Math.abs(object.y) > 1000)
-				delete objects[i];
+				objects.delete(i);
 			else
 				data[i] = object.toJSON();
 		}
+
 		io.sockets.emit('objects', data);
 	}, 1500);
 });

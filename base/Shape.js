@@ -88,17 +88,12 @@ define([
 			}
 		},
 
-		buildPath: function () {
+		buildPath: function (count) {
 			var dummy = this.toJSON(),
-				x = 1200, y = 1200,
-				i = 20,
+				i = count || 200,
 				path = [];
-			while ((Math.max(Math.abs(dummy.x), Math.abs(dummy.y)) < 1000)
-				&& (Math.max(Math.abs(dummy.x - x), Math.abs(dummy.y - y)) > 2)
-				&& (--i)) {
-				x = dummy.x;
-				y = dummy.y;
-				this.tick.call(dummy, 200);
+			while (--i) {
+				this.tick.call(dummy, 20);
 				path.push([dummy.x, dummy.y]);
 			}
 			this.path = path;
