@@ -5,14 +5,16 @@ define([
 	'base/Ship'
 ], function (events, Beam, Ship) {
 
-	var counter = 0,
+	var idCounter = 0,
 		objects = [],
+		byId = {},
 		types = {
 			beam: Beam,
 			ship: Ship
 		};
 
 	Object.defineProperties(objects, {
+		byId: byId,
 		create: {
 			value: function (type, data) {
 				if (typeof type == 'object') {
@@ -20,15 +22,17 @@ define([
 					type = data.type;
 				}
 				data || (data = {});
-				var id = data.id || (data.id = counter++);
-				if (type && (type = types[type]))
-					return objects[id] = new type(data);
+				var id = data.id || (data.id = idCounter++),
+					obj = new (types[type])(data);
+				objects.push(obj);
+				byId[id] = obj;
+				return obj;
 			}
 		},
 		set: {
 			value: function (data) {
-				if (objects.hasOwnProperty(data.id))
-					objects[data.id].extend(data);
+				if (data.id && byId.hasOwnProperty(data.id))
+					byId[data.id].extend(data);
 				else if (data.type)
 					objects.create(data);
 			}
@@ -37,24 +41,27 @@ define([
 			value: function (data) {
 				var i, props;
 				for (i in data) {
-					props = data[i];
-					if (objects.hasOwnProperty(props.id))
-						objects[props.id].extend(props);
-					else if (props.type)
-						objects.create(props);
+					if (data.hasOwnProperty(i)) {
+						props = data[i];
+						if (byId.hasOwnProperty(props.id))
+							byId[props.id].extend(props);
+						else if (props.type)
+							objects.create(props);
+					}
 				}
 				for (i = 0; i < objects.length; i++)
-					if (!data[i])
+					if (!data.hasOwnProperty(objects[i].id))
 						objects.delete(i);
 			}
 		},
 		delete: {
 			value: function (id) {
-				var obj = objects[id],
-					i = objects.indexOf(obj);
-				delete objects[id];
-				if (~i)
-					objects.splice(i, 1);
+				if (byId.hasOwnProperty(id)) {
+					var obj = byId[id],
+						i = objects.indexOf(obj);
+					if (~i)
+						objects.splice(i, 1);
+				}
 			}
 		},
 		toJSON: {
@@ -64,7 +71,7 @@ define([
 				for (i = 0; i < objects.length; i++) {
 					object = objects[i];
 					object.update();
-					data[i] = object.toJSON(full);
+					data[object.id] = object.toJSON(full);
 				}
 				return data;
 			}

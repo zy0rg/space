@@ -1,11 +1,11 @@
 define([
-	'io',
-
 	'core/objects',
 
 	'base/Shape',
-	'base/UserContext'
-], function (io, objects, Shape, UserContext) {
+
+	'./io',
+	'./UserContext'
+], function (objects, Shape, io, UserContext) {
 
 	Shape.add({
 

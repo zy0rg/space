@@ -1,5 +1,5 @@
 define([
-	'./Extendable'
+	'core/Extendable'
 ], function (Extendable) {
 
 	return Extendable.extend({

@@ -3,10 +3,10 @@ define([
 
 	'core/objects',
 
-	'client/canvas',
-	'client/keys',
-	'client/ticker',
-	'client/rig',
+	'./canvas',
+	'./keys',
+	'./ticker',
+	'./rig',
 
 	'base/Ship'
 ], function (io, objects, canvas, keys, ticker, rig, Ship) {

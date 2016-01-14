@@ -7,7 +7,17 @@
 
 	<link rel="stylesheet" type="text/css" href="css/base.css"/>
 
-	<script data-main="config" src="lib/require.js"></script>
+	<script type="text/javascript">
+		var require = {
+			deps: ['client/client'],
+			paths: {
+				jquery: 'lib/jquery-2.1.4',
+				io: 'lib/socket.io-1.3.6'
+			},
+			waitSeconds: 15
+		};
+	</script>
+	<script src="lib/require-2.1.20.js" ></script>
 </head>
 <body>
 <div data-canvas class="fill overflow"></div>

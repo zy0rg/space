@@ -28,31 +28,38 @@ define([
 		offsetX = window.innerWidth / 2,
 		offsetY = window.innerHeight / 2;
 
-	for (i in ids)
-		keys[ids[i]] = false;
+	for (i in ids) {
+		if (ids.hasOwnProperty(i)) {
+			keys[ids[i]] = false;
+		}
+	}
 
 	tools.extend(keys, events);
 
 	$(window).on({
 		keydown: function (event) {
 			var id = ids[event.which];
-			if (id && !keys[id])
+			if (id && !keys[id]) {
 				keys.trigger(id, keys[id] = true);
+			}
 		},
 		keyup: function (event) {
 			var id = ids[event.which];
-			if (id && keys[id])
+			if (id && keys[id]) {
 				keys.trigger(id, keys[id] = false);
+			}
 		},
 		mousedown: function (event) {
 			var id = buttons[event.which];
-			if (id && !keys[id])
+			if (id && !keys[id]) {
 				keys.trigger(id, keys[id] = true);
+			}
 		},
 		mouseup: function (event) {
 			var id = buttons[event.which];
-			if (id && keys[id])
+			if (id && keys[id]) {
 				keys.trigger(id, keys[id] = false);
+			}
 		},
 		mousemove: function (event) {
 			keys.trigger('mousePosition', keys.mousePosition = {

@@ -1,11 +1,10 @@
 define([
-	'base/Extendable',
-
-	'io',
-
+	'core/Extendable',
 	'core/objects',
-	'server/users'
-], function (Extendable, io, objects, users) {
+
+	'./io',
+	'./users'
+], function (Extendable, objects, io, users) {
 
 	var range = 23.43,
 		delta = 0.6946,

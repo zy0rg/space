@@ -1,5 +1,5 @@
 define([
-	'core/tools'
+	'./tools'
 ], function (tools) {
 
 	function Extendable() {
