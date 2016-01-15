@@ -33,7 +33,7 @@ define([
 
 	socket.on('you', function (id) {
 		rig.id = id;
-		rig.setShip(objects[id]);
+		rig.setShip(objects.byId[id]);
 	});
 
 	if (mouse) {

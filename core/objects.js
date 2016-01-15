@@ -14,7 +14,9 @@ define([
 		};
 
 	Object.defineProperties(objects, {
-		byId: byId,
+		byId: {
+			value: byId
+		},
 		create: {
 			value: function (type, data) {
 				if (typeof type == 'object') {

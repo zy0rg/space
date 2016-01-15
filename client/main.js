@@ -19,7 +19,7 @@ define([
 	socket.on('objects', objects.update);
 	socket.on('object', function (data) {
 		if (objects.hasOwnProperty(data.id))
-			objects[data.id].extend(data);
+			objects.byId[data.id].extend(data);
 		else
 			objects.create(data);
 	});
