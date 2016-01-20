@@ -1,18 +1,17 @@
 define([
-	'io',
 
 	'core/objects',
 
 	'./canvas',
 	'./keys',
+	'./socket',
 	'./ticker',
 	'./rig',
 
 	'base/Ship'
-], function (io, objects, canvas, keys, ticker, rig, Ship) {
+], function (objects, canvas, keys, socket, ticker, rig, Ship) {
 
-	var socket = io.connect(),
-		mouse = false;
+	var mouse = false;
 
 	Ship.add({
 		init: function () {
